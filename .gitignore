@@ -65,8 +65,6 @@ target/
 # Django Static Compiled
 static_compiled/
 
-settings.py
-
 *.pdf
 
 #python virtual environment
