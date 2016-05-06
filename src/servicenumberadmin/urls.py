@@ -21,3 +21,7 @@ urlpatterns = [
     url(r'^$', lambda x: HttpResponseRedirect('/admin')),
     url(r'^admin/', admin.site.urls),
 ]
+
+admin.site.site_header = 'CMS Service Number Administration'
+admin.site.site_title = 'CMS Service Number Administration'
+admin.site.index_title = ''
