@@ -31,9 +31,12 @@ class ServiceSetting(models.Model):
     description = models.CharField(max_length=128, verbose_name="Description", blank=True)
 
 
-beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
 
 def publish_data(service):
+    beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
+    print beanstalk.tubes()
+    print beanstalk.using()
+    print beanstalk.use('cms.setting.update')
     data = {
         'table': 'cmssetting',
         'id': service.pk,
