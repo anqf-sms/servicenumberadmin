@@ -5,6 +5,8 @@ from portal.models import *
 
 class ServiceSettingInlineAdmin(admin.TabularInline):
     model = ServiceSetting
+    max_num = 2
+    extra = 2
 
 class ServiceNumberAdmin(admin.ModelAdmin):
     model = ServiceNumber
