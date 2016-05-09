@@ -9,7 +9,7 @@ from django.dispatch.dispatcher import receiver
 # pybeanstalk imports
 import beanstalkc
 import simplejson
-
+import time
 
 # Create your models here.
 
@@ -56,8 +56,11 @@ def publish_data(service):
     }
     print '#'*20, simplejson.dumps(data)
     beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
-    print beanstalk.use('cms.setting.update')
-    print beanstalk.using(), beanstalk.tubes()
+    time.sleep(0.1)
+    beanstalk.use('cms.setting.update')
+    time.sleep(0.1)
+    beanstalk.using(), beanstalk.tubes()
+    time.sleep(0.1)
     beanstalk.put(simplejson.dumps(data))
     # except:
     #     pass
