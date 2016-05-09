@@ -22,7 +22,7 @@ class ServiceNumber(models.Model):
 
 class ServiceSetting(models.Model):
     service = models.ForeignKey(ServiceNumber, related_name="settings", on_delete=models.CASCADE,)
-    port_type = models.CharField(max_length=16, verbose_name="Port Type", choices=(('TCP', 'TCP'), ('SERIAL', 'SERIAL'),))
+    port_type = models.CharField(max_length=16, verbose_name="Port Type", choices=(('tcp', 'tcp'), ('serial', 'serial'),))
     port = models.CharField(max_length=8, verbose_name="Port")
     remote_as_ip = models.GenericIPAddressField(verbose_name="AS IP")
     remote_receiver_ip = models.GenericIPAddressField(verbose_name="Receiver IP")
@@ -32,43 +32,49 @@ class ServiceSetting(models.Model):
 
 
 def publish_data(service):
-    # try:
-    data = {
-        'table': 'cmssetting',
-        'id': service.securidial,
-        'callerid': {
-            'securidial': service.securidial,
-            'caller_number': service.caller_number,
-            "remote_r": service.remote_r,
-            "remote_l": service.remote_l,
-        },
-        'callerid_as_settings': [
-            {
-                'type': setting.port_type,
-                'port': setting.port,
-                'remote_as_ip': setting.remote_as_ip,
-                'remote_receiver_ip': setting.remote_receiver_ip,
-                'json_setting': setting.json_setting,
-                'description': setting.description,
-            } for setting in service.settings.all()
-        ],
-    }
-    print '#'*20, simplejson.dumps(data)
-    beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
-    beanstalk.use('cms.setting.update')
-    beanstalk.using(), beanstalk.tubes()
-    beanstalk.put(simplejson.dumps(data))
-    # except:
-    #     pass
+    try:
+        data = {
+            'table': 'cmssetting',
+            'id': service.securidial,
+            'callerid': {
+                'securidial': service.securidial,
+                'caller_number': service.caller_number,
+                "remote_r": service.remote_r,
+                "remote_l": service.remote_l,
+            },
+            'callerid_as_settings': [
+                {
+                    'type': setting.port_type,
+                    'port': setting.port,
+                    'remote_as_ip': setting.remote_as_ip,
+                    'remote_receiver_ip': setting.remote_receiver_ip,
+                    'json_setting': setting.json_setting,
+                    'description': setting.description,
+                } for setting in service.settings.all()
+            ],
+        }
+        # print '#'*20, simplejson.dumps(data)
+        beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
+        beanstalk.use('cms.setting.update')
+        beanstalk.using(), beanstalk.tubes()
+        beanstalk.put(simplejson.dumps(data))
+    except:
+        pass
 
 @receiver(post_save, sender=ServiceNumber)
 def ServiceNumber_post_save_works(sender, instance, **kwargs):
     print '========ServiceNumber saved'
     publish_data(instance)
 
+@receiver(pre_save, sender=ServiceSetting)
+def ServiceSetting_pre_save_works(sender, instance, **kwargs):
+    #print '@'*20, instance
+    instance.port = instance.port.lower()
+    #print '@'*20, instance
+
 @receiver(post_save, sender=ServiceSetting)
 def ServiceSetting_post_save_works(sender, instance, **kwargs):
-    print '======== saved'
+    print '======== ServiceSetting saved'
     publish_data(instance.service)
 
 # {
