@@ -7,8 +7,7 @@ from django.db.models.signals import *
 from django.dispatch.dispatcher import receiver
 
 # pybeanstalk imports
-from beanstalk import serverconn
-from beanstalk import job
+import beanstalkc
 import simplejson
 
 
@@ -32,8 +31,7 @@ class ServiceSetting(models.Model):
     description = models.CharField(max_length=128, verbose_name="Description", blank=True)
 
 
-connection = serverconn.ServerConn('127.0.0.1', 11300)
-connection.job = job.Job
+beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
 
 def publish_data(service):
     data = {
@@ -57,8 +55,7 @@ def publish_data(service):
         ],
     }
     print '#'*20, data
-    myjob = job.Job(data=simplejson.dumps(data), conn=connection)
-    myjob.Queue()
+    beanstalk.put(simplejson.dumps(data))
 
 @receiver(post_save, sender=ServiceNumber)
 def ServiceNumber_post_save_works(sender, instance, **kwargs):
