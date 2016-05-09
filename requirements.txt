@@ -1,1 +1,7 @@
 Django==1.9.5
+PyYAML==3.11
+argparse==1.2.1
+pyaml==15.8.2
+pybeanstalk==1.0rc1
+simplejson==3.8.2
+wsgiref==0.1.2
