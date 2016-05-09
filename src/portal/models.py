@@ -65,9 +65,7 @@ def ServiceNumber_post_save_works(sender, instance, **kwargs):
 
 @receiver(post_save, sender=ServiceSetting)
 def ServiceSetting_post_save_works(sender, instance, **kwargs):
-    print '#'*20, instance
-    service = instance.service
-    publish_data(instance)
+    publish_data(instance.service)
 
 # {
 #     "table": "cmssetting",
