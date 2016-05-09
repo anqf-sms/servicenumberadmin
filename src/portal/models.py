@@ -57,8 +57,8 @@ def publish_data(service):
         ],
     }
     print '#'*20, data
-    job = job.Job(data=simplejson.dumps(data), conn=connection)
-    job.Queue()
+    myjob = job.Job(data=simplejson.dumps(data), conn=connection)
+    myjob.Queue()
 
 @receiver(post_save, sender=ServiceNumber)
 def ServiceNumber_post_save_works(sender, instance, **kwargs):
