@@ -3,10 +3,13 @@ from django.contrib import admin
 from portal.models import *
 
 
+class ServiceSettingInlineAdmin(admin.TabularInline):
+    model = ServiceSetting
+
 class ServiceNumberAdmin(admin.ModelAdmin):
-    # class Meta:
-    #     model = ServiceNumber
+    model = ServiceNumber
     list_display = ('securidial', 'caller_number', 'remote_r', 'remote_l', )
+    inlines = (ServiceSettingInlineAdmin, )
 
 class ServiceSettingAdmin(admin.ModelAdmin):
     class Meta:
@@ -18,4 +21,4 @@ class ServiceSettingAdmin(admin.ModelAdmin):
 # Register your models here.
 
 admin.site.register(ServiceNumber, ServiceNumberAdmin)
-admin.site.register(ServiceSetting, ServiceSettingAdmin)
+#admin.site.register(ServiceSetting, ServiceSettingAdmin)

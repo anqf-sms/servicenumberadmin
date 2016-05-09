@@ -38,7 +38,7 @@ def publish_data(service):
     print beanstalk.using(), beanstalk.tubes()
     data = {
         'table': 'cmssetting',
-        'id': service.pk,
+        'id': service.securidial,
         'callerid': {
             'securidial': service.securidial,
             'caller_number': service.caller_number,
