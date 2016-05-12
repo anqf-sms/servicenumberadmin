@@ -82,7 +82,7 @@ def publish_data(service):
             ],
         }
         # print '#'*20, data
-        # print '#'*20, simplejson.dumps(data)
+        print '#'*20, simplejson.dumps(data)
         beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
         beanstalk.use('cms.setting.update')
         #beanstalk.watch('cms.setting.update')
