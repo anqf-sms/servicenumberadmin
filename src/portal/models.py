@@ -22,7 +22,10 @@ class ServiceNumber(models.Model):
     remote_l = models.CharField(max_length=32, verbose_name="Remote L", blank=True)
     def did_number(self):
         did_records = self.did_records.filter(begin_date_time__lte=timezone.now()).order_by('-pk')
-        return did_records.first().did_number
+        if len(did_records)==0:
+            return ''
+        else:
+            return did_records.first().did_number
     def __unicode__(self):
           return '{} -> {}'.format(self.securidial, self.did_number())
 
