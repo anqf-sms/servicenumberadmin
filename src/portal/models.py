@@ -23,7 +23,7 @@ class ServiceNumber(models.Model):
     def did_number(self):
         did_records = self.did_records.filter(begin_date_time__lte=timezone.now()).order_by('-pk')
         if len(did_records)==0:
-            return ''
+            return '- no did -'
         else:
             return did_records.first().did_number
     def __unicode__(self):
