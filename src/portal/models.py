@@ -56,17 +56,11 @@ def publish_data(service):
         data = {
             'table': 'cmssetting',
             'id': service.securidial,
-            "remote_r": service.remote_r,
-            "remote_l": service.remote_l,
-            'did_records':[
-                {
-                    'did_number': r.did_number,
-                    'begin_date_time': str(r.begin_date_time), #timezone.localtime()
-                    'end_date_time': None if r.end_date_time is None else str(r.end_date_time),
-                    'created_by': r.created_by.username,
-                    'created': str(r.created.replace(microsecond=0)),
-                } for r in did_records
-            ],
+            'callerid': {
+                'securidial': service.securidial,
+                'remote_r': service.remote_r,
+                'remote_l': service.remote_l,
+            },
             'callerid_as_settings': [
                 {
                     'type': setting.port_type,
@@ -77,11 +71,21 @@ def publish_data(service):
                     'description': setting.description,
                 } for setting in service.settings.all()
             ],
+            'did_records':[
+                {
+                    'did_number': r.did_number,
+                    'begin_date_time': str(r.begin_date_time), #timezone.localtime()
+                    'end_date_time': None if r.end_date_time is None else str(r.end_date_time),
+                    'created_by': r.created_by.username,
+                    'created': str(r.created.replace(microsecond=0)),
+                } for r in did_records
+            ],
         }
         # print '#'*20, data
         # print '#'*20, simplejson.dumps(data)
         beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
         beanstalk.use('cms.setting.update')
+        #beanstalk.watch('cms.setting.update')
         #print beanstalk.using(), beanstalk.tubes()
         beanstalk.put(simplejson.dumps(data))
     # except:
