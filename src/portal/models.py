@@ -75,8 +75,8 @@ def publish_data(service):
                 } for setting in service.settings.all()
             ],
         }
-        print '#'*20, data
-        print '#'*20, simplejson.dumps(data)
+        # print '#'*20, data
+        # print '#'*20, simplejson.dumps(data)
         beanstalk = beanstalkc.Connection(host='127.0.0.1', port=11300)
         beanstalk.use('cms.setting.update')
         beanstalk.using(), beanstalk.tubes()
@@ -116,7 +116,7 @@ def refine_end_date_time(service):
 
 @receiver(post_save, sender=ServiceNumber)
 def ServiceNumber_post_save_works(sender, instance, **kwargs):
-    print '========ServiceNumber saved'
+    # print '========ServiceNumber saved'
     refine_end_date_time(instance)
 
 
@@ -128,7 +128,7 @@ def ServiceSetting_pre_save_works(sender, instance, **kwargs):
 
 @receiver(post_save, sender=ServiceSetting)
 def ServiceSetting_post_save_works(sender, instance, **kwargs):
-    print '======== ServiceSetting saved'
+    # print '======== ServiceSetting saved'
     publish_data(instance.service)
 
 
