@@ -63,13 +63,13 @@ class DidAddForm(forms.ModelForm):
         return changed
 
     def clean(self):
-        print '$'*100
+        # print '$'*100
         # print 'pk=', repr(self.instance.pk), 'did_number=', repr(self.instance.did_number), 'begin_date_time=', repr(self.instance.begin_date_time)
         cleaned_data = super(DidAddForm, self).clean()
         begin_date_time = cleaned_data.get('begin_date_time')
         timeline = cleaned_data.get('timeline')
         if begin_date_time is not None and begin_date_time<timeline:
-            raise forms.ValidationError([{'begin_date_time':'Past time not allowed.'}])
+            raise forms.ValidationError({'begin_date_time': ['Past time not allowed.',]})
         # del cleaned_data['timeline']
         return cleaned_data
 
